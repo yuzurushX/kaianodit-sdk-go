@@ -1,4 +1,4 @@
-package nodit
+package kaianodit
 
 // NFTContractMetadataRequest represents the request body for getNftContractMetadataByContracts
 type NFTContractMetadataRequest struct {
