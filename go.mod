@@ -1,3 +1,3 @@
-module github.com/YuzuRushX/kaianodit-sdk-go
+module github.com/yuzurushX/kaianodit-sdk-go
 
-go 1.20 
+go 1.22.2
