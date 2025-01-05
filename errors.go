@@ -1,4 +1,4 @@
-package nodit
+package kaianodit
 
 import (
 	"fmt"
