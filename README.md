@@ -27,7 +27,7 @@ import "github.com/yuzurushX/kaianodit-go"
 
 ## Documentation
 
-For detailed documentation on each endpoint, refer to the [Kaian ODit API documentation](https://apidoc.kaian.io/docs/kaian-odit-api).
+For detailed documentation on each endpoint, refer to the [Nodit API Documentation](https://developer.nodit.io/reference/kaia-getnftcontractmetadatabycontracts)
 
 ## Available Methods
 
