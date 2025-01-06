@@ -139,6 +139,13 @@ type TokenPricesRequest struct {
 	ContractAddresses []string `json:"contractAddresses"`
 }
 
+type TokenContract struct{
+	Name            string           `json:"name"`
+	Symbol          string           `json:"symbol"`
+	TotalSupply     string           `json:"totalSupply"`
+	Decimals       	int64            `json:"decimals"`
+
+}
 // TokenTransfer represents a single token transfer record
 type TokenTransfer struct {
 	From            string           `json:"from"`
@@ -304,7 +311,7 @@ type NFTContract struct {
 	DeployedTransactionHash string `json:"deployedTransactionHash"`
 	DeployedAt            string `json:"deployedAt"`
 	DeployerAddress       string `json:"deployerAddress"`
-	LogoURL              string `json:"logoUrl"`
+	LogoURL              *string `json:"logoUrl"`
 	Type                 string `json:"type"`
 	Name                 string `json:"name"`
 	Symbol               string `json:"symbol"`
@@ -363,27 +370,6 @@ type NFTTransfersByAccountRequest struct {
 	WithZeroValue     *bool    `json:"withZeroValue,omitempty"`
 }
 
-// NFTTransfer represents a single NFT transfer record
-type NFTTransfer struct {
-	From            string       `json:"from"`
-	To              string       `json:"to"`
-	Value           string       `json:"value"`
-	Timestamp       int64        `json:"timestamp"`
-	BlockNumber     int64        `json:"blockNumber"`
-	TransactionHash string       `json:"transactionHash"`
-	LogIndex        int         `json:"logIndex"`
-	BatchIndex      *int        `json:"batchIndex,omitempty"`
-	Contract        NFTContract  `json:"contract"`
-	NFT            NFTMetadata  `json:"nft"`
-}
-
-// NFTTransferResponse represents the response for getNftTransfersByAccount
-type NFTTransferResponse struct {
-	Rpp    int           `json:"rpp"`
-	Count  *int          `json:"count,omitempty"`
-	Cursor string        `json:"cursor"`
-	Items  []NFTTransfer `json:"items"`
-}
 
 // NFTTransfersByContractRequest represents the request for getNftTransfersByContract
 type NFTTransfersByContractRequest struct {
@@ -449,25 +435,6 @@ type NFTTransfer struct {
 	NFT            *NFTMetadata `json:"nft,omitempty"`
 }
 
-type NFTContract struct {
-	Address                 string `json:"address"`
-	DeployedTransactionHash string `json:"deployedTransactionHash"`
-	DeployedAt             string `json:"deployedAt"`
-	DeployerAddress        string `json:"deployerAddress"`
-	LogoURL                *string `json:"logoUrl"`
-	Type                   string `json:"type"`
-	Name                   string `json:"name"`
-	Symbol                 string `json:"symbol"`
-}
-
-// If NFTMetadata isn't already defined elsewhere in your types
-type NFTMetadata struct {
-	TokenId          string    `json:"tokenId"`
-	TokenUri         string    `json:"tokenUri"`
-	TokenUriSyncedAt string    `json:"tokenUriSyncedAt"`
-	RawMetadata      string    `json:"rawMetadata"`
-	MetadataSyncedAt string    `json:"metadataSyncedAt"`
-}
 
 type NFTItem struct {
 	TokenId          string  `json:"tokenId"`
