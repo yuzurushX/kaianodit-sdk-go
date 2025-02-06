@@ -104,4 +104,10 @@ For detailed documentation on each endpoint, refer to the [Nodit API Documentati
 - `GetNFTTransfersByContract` - Get transfers for contract
 - `GetNFTTransfersByTokenId` - Get transfers for specific token
 - `GetNFTTransfersWithinRange` - Get transfers within range
-- `
+
+### Webhook Integration
+- `CreateWebhook` - Create a new webhook subscription.
+- `GetWebhook` - Retrieve details of a specific webhook.
+- `ListWebhooks` - Retrieve all webhook subscriptions.
+- `UpdateWebhook` - Update an existing webhook configuration.
+- `DeleteWebhook` - Remove a webhook subscription.
