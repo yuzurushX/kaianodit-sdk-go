@@ -6,13 +6,30 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 func (c *Client) doRequestAndDecode(method, path string, body interface{}, result interface{}) error {
-	url := fmt.Sprintf("%s%s", c.baseURL, path)
+	var url string
+	
+	// Check if this is a node request (full URL) or regular API request (path only)
+	if strings.HasPrefix(path, "http") {
+		url = path
+	} else {
+		// Ensure path starts with /v1/kaia/ and includes the network for regular API requests
+		if !strings.HasPrefix(path, "/v1/kaia/") {
+			path = fmt.Sprintf("/v1/kaia/%s/%s", c.network, strings.TrimPrefix(path, "/"))
+		}
+		url = fmt.Sprintf("%s%s", c.baseURL, path)
+	}
 
 	var bodyReader io.Reader
-	if body != nil {
+	switch v := body.(type) {
+	case []byte:
+		bodyReader = bytes.NewReader(v)
+	case nil:
+		bodyReader = nil
+	default:
 		jsonBody, err := json.Marshal(body)
 		if err != nil {
 			return fmt.Errorf("failed to marshal request body: %w", err)

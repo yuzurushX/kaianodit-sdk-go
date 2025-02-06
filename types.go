@@ -711,4 +711,196 @@ type Assets struct {
 	Tokens        int `json:"tokens"`
 	NFTs          int `json:"nfts"`
 	NFTContracts int `json:"nftContracts"`
+}
+
+// JSONRPCRequest represents a JSON-RPC 2.0 request
+type JSONRPCRequest struct {
+	JSONRPC string        `json:"jsonrpc"`
+	Method  string        `json:"method"`
+	Params  []interface{} `json:"params"`
+	ID      int          `json:"id"`
+}
+
+// JSONRPCResponse represents a JSON-RPC 2.0 response
+type JSONRPCResponse struct {
+	JSONRPC string          `json:"jsonrpc"`
+	Result  json.RawMessage `json:"result"`
+	Error   *RPCError       `json:"error,omitempty"`
+	ID      int             `json:"id"`
+}
+
+// RPCError represents a JSON-RPC 2.0 error
+type RPCError struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+// Ethereum JSON-RPC specific types
+type CallRequest struct {
+	From     string `json:"from,omitempty"`
+	To       string `json:"to"`
+	Gas      string `json:"gas,omitempty"`
+	GasPrice string `json:"gasPrice,omitempty"`
+	Value    string `json:"value,omitempty"`
+	Data     string `json:"data,omitempty"`
+}
+
+type AccessListEntry struct {
+	Address     string   `json:"address"`
+	StorageKeys []string `json:"storageKeys"`
+}
+
+type AccessList struct {
+	AccessList []AccessListEntry `json:"accessList"`
+	GasUsed    string           `json:"gasUsed"`
+}
+
+type FeeHistoryResult struct {
+	OldestBlock  string     `json:"oldestBlock"`
+	BaseFeePerGas []string   `json:"baseFeePerGas"`
+	GasUsedRatio []float64  `json:"gasUsedRatio"`
+	Reward      [][]string  `json:"reward,omitempty"`
+}
+
+type Log struct {
+	Removed          bool     `json:"removed"`
+	LogIndex         string   `json:"logIndex"`
+	TransactionIndex string   `json:"transactionIndex"`
+	TransactionHash  string   `json:"transactionHash"`
+	BlockHash        string   `json:"blockHash"`
+	BlockNumber      string   `json:"blockNumber"`
+	Address          string   `json:"address"`
+	Data             string   `json:"data"`
+	Topics           []string `json:"topics"`
+}
+
+type FilterOptions struct {
+	FromBlock string     `json:"fromBlock,omitempty"`
+	ToBlock   string     `json:"toBlock,omitempty"`
+	Address   string     `json:"address,omitempty"`
+	Topics    []string   `json:"topics,omitempty"`
+}
+
+type ProofResponse struct {
+	Address      string          `json:"address"`
+	Balance      string          `json:"balance"`
+	CodeHash     string          `json:"codeHash"`
+	Nonce        string          `json:"nonce"`
+	StorageHash  string          `json:"storageHash"`
+	AccountProof []string        `json:"accountProof"`
+	StorageProof []StorageProof  `json:"storageProof"`
+}
+
+type StorageProof struct {
+	Key   string   `json:"key"`
+	Value string   `json:"value"`
+	Proof []string `json:"proof"`
+}
+
+type TransactionReceipt struct {
+	TransactionHash   string   `json:"transactionHash"`
+	TransactionIndex  string   `json:"transactionIndex"`
+	BlockHash        string   `json:"blockHash"`
+	BlockNumber      string   `json:"blockNumber"`
+	From             string   `json:"from"`
+	To               string   `json:"to"`
+	CumulativeGasUsed string   `json:"cumulativeGasUsed"`
+	GasUsed          string   `json:"gasUsed"`
+	ContractAddress  string   `json:"contractAddress"`
+	Logs             []Log    `json:"logs"`
+	LogsBloom        string   `json:"logsBloom"`
+	Status           string   `json:"status"`
+	EffectiveGasPrice string  `json:"effectiveGasPrice"`
+	Type             string   `json:"type"`
+}
+
+// Update JSONRPCResponse to handle different result types
+type JSONRPCResponse struct {
+	JSONRPC string          `json:"jsonrpc"`
+	Result  json.RawMessage `json:"result"`
+	Error   *RPCError       `json:"error,omitempty"`
+	ID      int             `json:"id"`
+}
+
+// Webhook Types
+type WebhookEventType string
+
+const (
+	EventTypeAddressActivity      WebhookEventType = "ADDRESS_ACTIVITY"
+	EventTypeMinedTransaction     WebhookEventType = "MINED_TRANSACTION"
+	EventTypeSuccessfulTransaction WebhookEventType = "SUCCESSFUL_TRANSACTION"
+	EventTypeFailedTransaction    WebhookEventType = "FAILED_TRANSACTION"
+	EventTypeTokenTransfer        WebhookEventType = "TOKEN_TRANSFER"
+	EventTypeBelowThresholdBalance WebhookEventType = "BELOW_THRESHOLD_BALANCE"
+	EventTypeBlockPeriod          WebhookEventType = "BLOCK_PERIOD"
+	EventTypeBlockListCaller      WebhookEventType = "BLOCK_LIST_CALLER"
+	EventTypeAllowListCaller      WebhookEventType = "ALLOW_LIST_CALLER"
+	EventTypeLog                  WebhookEventType = "LOG"
+)
+
+type WebhookNotification struct {
+	WebhookURL string `json:"webhookUrl"`
+}
+
+// TokenCondition represents a token contract condition
+type TokenCondition struct {
+	ContractAddress string `json:"contractAddress"`
+}
+
+// WebhookCondition represents different types of conditions based on event type
+type WebhookCondition struct {
+	// For ADDRESS_ACTIVITY, MINED_TRANSACTION, SUCCESSFUL_TRANSACTION, FAILED_TRANSACTION
+	Addresses []string `json:"addresses,omitempty"`
+
+	// For TOKEN_TRANSFER
+	Tokens []TokenCondition `json:"tokens,omitempty"`
+
+	// For BELOW_THRESHOLD_BALANCE
+	Address                string `json:"address,omitempty"`
+	BelowThresholdBalance string `json:"belowThresholdBalance,omitempty"`
+
+	// For BLOCK_PERIOD
+	Period int `json:"period,omitempty"`
+
+	// For BLOCK_LIST_CALLER
+	BlockListCallers []string `json:"blockListCallers,omitempty"`
+
+	// For ALLOW_LIST_CALLER
+	AllowListCallers []string `json:"allowListCallers,omitempty"`
+
+	// For LOG
+	Address string   `json:"address,omitempty"` // Contract address for LOG event type
+	Topics  []string `json:"topics,omitempty"`
+}
+
+type CreateWebhookRequest struct {
+	EventType    WebhookEventType    `json:"eventType"`
+	Description  string              `json:"description"`
+	Notification WebhookNotification `json:"notification"`
+	Condition    WebhookCondition    `json:"condition"`
+}
+
+type Webhook struct {
+	SubscriptionID string              `json:"subscriptionId"`
+	EventType      WebhookEventType    `json:"eventType"`
+	Description    string              `json:"description"`
+	Notification   WebhookNotification `json:"notification"`
+	Condition      WebhookCondition    `json:"condition"`
+	CreatedAt      string              `json:"createdAt,omitempty"`
+	UpdatedAt      string              `json:"updatedAt,omitempty"`
+}
+
+type ListWebhooksResponse struct {
+	Webhooks []Webhook `json:"webhooks"`
+}
+
+type WebhookResponse struct {
+	Message string  `json:"message,omitempty"`
+	Data    Webhook `json:"data,omitempty"`
+}
+
+type UpdateWebhookRequest struct {
+	Description  string              `json:"description,omitempty"`
+	Notification WebhookNotification `json:"notification,omitempty"`
+	Condition    WebhookCondition    `json:"condition,omitempty"`
 } 
